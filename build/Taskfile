@@ -64,18 +64,16 @@ task:abc:download() {
 }
 
 task:abc:fetch() {
-  count="$1"
-  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects && curl https://deep-geometry.github.io/abc-dataset/data/obj_v00.txt --output obj_v00.txt'
-  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects && mkdir -p abc'
-  docker:container_run vpgt /usr/src/downloads/download-abc.sh "${count:-1}"
-  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects && rm obj_v00.txt';
+  docker:container_run vpgt -w /usr/src/objects vpgt wget https://archive.nyu.edu/retrieve/120664/abc_full_10k_v00.zip
 }
 
 task:abc:extract(){
-  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects/abc && for f in *.7z; do p7zip -d ${f}; done;';
-  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects/abc && mv */* . && rm -rf ./*/';
+  docker:container_run -w /usr/src/objects vpgt vpgt unzip abc_full_10k_v00.zip -d abc_tmp
+  docker:container_run -w /usr/src/objects/abc_tmp vpgt /bin/bash -c "mv */* . && rm -r 10k"
 }
 
 task:abc:scale() {
-  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects/abc && for f in *.obj; do python3 ../../scale.py "/usr/src/objects/abc/${f}" "/usr/src/objects/abc/${f}" 0.001; done;';
+  docker:container_run -w /usr/src/objects vpgt /bin/bash -c "mkdir -p abc && mkdir -p abc/train && mkdir -p abc/test"
+  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects/abc_tmp/train/512 && for f in *.obj; do python3 ../../../../scale.py "/usr/src/objects/abc_tmp/train/512/${f}" "/usr/src/objects/abc/train/${f}" 0.001; done;';
+  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects/abc_tmp/test/512 && for f in *.obj; do python3 ../../../../scale.py "/usr/src/objects/abc_tmp/test/512/${f}" "/usr/src/objects/abc/test/${f}" 0.001; done;';
 }
