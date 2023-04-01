@@ -25,11 +25,11 @@ task:shell() {
 # train commands
 ############################################################
 task:train:blocks() {
-  python main.py --is_sim --push_rewards --experience_replay --explore_rate_decay --save_visualizations
+  b5 shell vpgt python3 main.py --is_sim --push_rewards --experience_replay --explore_rate_decay --save_visualizations
 }
 
 task:train:abc() {
-  python main.py --is_sim --obj_mesh_dir 'objects/abc' --push_rewards --experience_replay --explore_rate_decay --save_visualizations
+  b5 shell vpgt python3 main.py --is_sim --obj_mesh_dir 'objects/abc_scaled' --push_rewards --experience_replay --explore_rate_decay --save_visualizations
 }
 
 ############################################################
@@ -60,18 +60,22 @@ task:assets:download() {
 task:abc:download() {
   task:abc:fetch
   task:abc:extract
-
+  task:abc:scale
 }
 
 task:abc:fetch() {
-  cd ../objects
-  curl https://deep-geometry.github.io/abc-dataset/data/obj_v00.txt --output obj_v00.txt
-  mkdir -p abc
-  cat obj_v00.txt | xargs -n 2 sh -c 'curl --insecure -o abc/$1 $0'
-  rm obj_v00.txt
-  cd ../build
+  count="$1"
+  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects && curl https://deep-geometry.github.io/abc-dataset/data/obj_v00.txt --output obj_v00.txt'
+  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects && mkdir -p abc'
+  docker:container_run vpgt head -n "${count:-1}" /usr/src/objects/obj_v00.txt | xargs -n 2 sh -c 'echo /usr/src/objects/meta/$1 $0'
+  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects && rm obj_v00.txt';
 }
 
 task:abc:extract(){
-  b5 shell vpgt cd /usr/src/objects/abc && for f in *.7z; do p7zip -d ${f}; done;
+  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects/abc && for f in *.7z; do p7zip -d ${f}; done;';
+  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects/abc && mv */* . && rm -rf ./*/';
+}
+
+task:abc:scale() {
+  docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects/abc && for f in *.obj; do python3 ../../scale.py "/usr/src/objects/abc/${f}" "/usr/src/objects/abc/${f}" 0.001; done;';
 }

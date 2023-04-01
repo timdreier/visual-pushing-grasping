@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 nvidia/cuda:12.0.0-base-ubuntu18.04
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y python3 python3-pip python3-opencv git wget p7zip-full
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y python3 python3-pip python3-opencv git wget p7zip-full curl
 
 RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
