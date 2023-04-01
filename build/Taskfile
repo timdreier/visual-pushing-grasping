@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# b5 Taskfile, see https://git.team23.de/build/b5 for details
+
+############################################################
+# general commands
+############################################################
+
+task:run() {
+    xhost +local:docker
+    docker:compose up "$@"
+}
+
+task:halt() {
+    docker:compose down "$@"
+}
+
+task:shell() {
+    container="$1"
+    command="$2"
+    additionalArguments="${@:3}"
+    docker:container_run "${container:-python}" "${command:-/bin/bash}" ${additionalArguments:-}
+}
+
+############################################################
+# train commands
+############################################################
+task:train:blocks() {
+  python main.py --is_sim --push_rewards --experience_replay --explore_rate_decay --save_visualizations
+}
+
+task:train:abc() {
+  python main.py --is_sim --obj_mesh_dir 'objects/abc' --push_rewards --experience_replay --explore_rate_decay --save_visualizations
+}
+
+############################################################
+# evaluation commands
+############################################################
+
+############################################################
+# maintenance commands
+############################################################
+
+task:update() {
+  task:assets:download
+  docker:update
+}
+
+task:install() {
+  #task:assets:download
+  docker:install
+}
+
+############################################################
+# assets commands
+############################################################
+task:assets:download() {
+  cd downloads && ./download-weights.sh
+}
+
+task:abc:download() {
+  task:abc:fetch
+  task:abc:extract
+
+}
+
+task:abc:fetch() {
+  cd ../objects
+  curl https://deep-geometry.github.io/abc-dataset/data/obj_v00.txt --output obj_v00.txt
+  mkdir -p abc
+  cat obj_v00.txt | xargs -n 2 sh -c 'curl --insecure -o abc/$1 $0'
+  rm obj_v00.txt
+  cd ../build
+}
+
+task:abc:extract(){
+  b5 shell vpgt cd /usr/src/objects/abc && for f in *.7z; do p7zip -d ${f}; done;
+}

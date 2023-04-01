@@ -6,6 +6,8 @@ logs/*
 downloads/server
 downloads/*.pth
 
+objects/abc
+
 real/camera_depth_scale.txt
 real/camera_pose.txt
 

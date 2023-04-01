@@ -1,0 +1,29 @@
+services:
+    vpgt:
+      deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                count: 1
+                capabilities: [gpu]
+
+    vrep:
+      build: docker/vrep
+      command: ./vrep.sh --args /usr/src/simulation/simulation.ttt
+      deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                count: 1
+                capabilities: [ gpu ]
+      ports:
+        - 19997:19997
+      environment:
+        - DISPLAY
+        - NVIDIA_VISIBLE_DEVICES=all
+        - NVIDIA_DRIVER_CAPABILITIES=all
+      volumes:
+        - /tmp/.X11-unix:/tmp/.X11-unix
+        - ../:/usr/src/

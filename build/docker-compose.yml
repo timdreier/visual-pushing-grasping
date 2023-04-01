@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  vpgt:
+    build: docker/vpgt
+    environment:
+      - DISPLAY=host.docker.internal:0
+      - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+    network_mode: host
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ../:/usr/src/
