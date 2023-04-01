@@ -67,7 +67,7 @@ task:abc:fetch() {
   count="$1"
   docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects && curl https://deep-geometry.github.io/abc-dataset/data/obj_v00.txt --output obj_v00.txt'
   docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects && mkdir -p abc'
-  docker:container_run vpgt head -n "${count:-1}" /usr/src/objects/obj_v00.txt | xargs -n 2 sh -c 'echo /usr/src/objects/meta/$1 $0'
+  docker:container_run vpgt /usr/src/downloads/download-abc.sh "${count:-1}"
   docker:container_run vpgt /bin/bash -c 'cd /usr/src/objects && rm obj_v00.txt';
 }
 
