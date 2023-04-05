@@ -29,7 +29,7 @@ task:train:blocks() {
 }
 
 task:train:abc() {
-  b5 shell vpgt python3 main.py --is_sim --obj_mesh_dir 'objects/abc_scaled' --push_rewards --experience_replay --explore_rate_decay --save_visualizations
+  b5 shell vpgt python3 main.py --is_sim --obj_mesh_dir 'objects/abc_exp' --push_rewards --experience_replay --explore_rate_decay --save_visualizations
 }
 
 task:scenario:create() {
@@ -39,10 +39,10 @@ task:scenario:create() {
 task:scenario:run() {
   objdir="$1"
   exp="$2"
-  b5 shell vpgt python3 main.py --is_sim --obj_mesh_dir "objects/${objdir:-blocks}" --num_obj 10 \
+  b5 shell vpgt python3 main.py --is_sim --obj_mesh_dir "objects/${objdir:-blocks}" --num_obj 1 \
     --push_rewards --experience_replay --explore_rate_decay \
     --is_testing --test_preset_cases --test_preset_file "simulation/test-cases/${exp:-test-10-obj-00.txt}" \
-    --load_snapshot \
+    --load_snapshot --snapshot_file "logs/abc/models/snapshot-007600.reinforcement.pth" \
     --save_visualizations
 }
 
