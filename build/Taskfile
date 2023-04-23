@@ -39,10 +39,11 @@ task:scenario:create() {
 task:scenario:run() {
   objdir="$1"
   exp="$2"
-  b5 shell vpgt python3 main.py --is_sim --obj_mesh_dir "objects/${objdir:-blocks}" --num_obj 1 \
+  num_obj="$3"
+  b5 shell vpgt python3 main.py --is_sim --obj_mesh_dir "objects/${objdir:-blocks}" \
     --push_rewards --experience_replay --explore_rate_decay \
     --is_testing --test_preset_cases --test_preset_file "simulation/test-cases/${exp:-test-10-obj-00.txt}" \
-    --load_snapshot --snapshot_file "logs/abc/models/snapshot-007600.reinforcement.pth" \
+    --load_snapshot --snapshot_file "logs/latest/models/model.pth" \
     --save_visualizations
 }
 
@@ -60,7 +61,6 @@ task:update() {
 }
 
 task:install() {
-  #task:assets:download
   docker:install
 }
 
