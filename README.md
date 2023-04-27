@@ -27,16 +27,16 @@ This should open vrep with the default scene.
 The following commands are available in the project. Navigate to the location of this repo in your shell and run the commands there.
 
 `b5 train:blocks`
-Will start a Training on the Dataset located in `objects/blocks`.
+Will start a training on the dataset located in `objects/blocks`.
 
 `b5 train:abc`
-Will start a Training on the Dataset located in `objects/abc`
+Will start a training on the dataset located in `objects/abc`
 
 `b5 scenario:create`
-Let you create a new Scenario. See [here](https://github.com/andyzeng/visual-pushing-grasping#evaluation) for more information.
+let you create a new Scenario. See [here](https://github.com/andyzeng/visual-pushing-grasping#evaluation) for more information.
 
 `b5 scenario:run`
-Will run the evaluations used in my work. You need to specify the assets directory and the scenario you want to run.
+will run the evaluations used in my work. You need to specify the assets directory and the scenario you want to run.
 
 Since I couldn't publish my model on GitHub, you have to train your own first. See commands above on how to do so.
 After training, rename your log located in `logs` to latest and rename the model you want to use to `logs/latest/models/latest.pth`
