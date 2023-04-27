@@ -3,7 +3,7 @@ This is a fork of [Visual Pushing and Grasping Toolbox](https://github.com/andyz
 I used in my university project for AI-based gripping point determination.
 
 ## Prerequisite
-You will need a GPU with at least 10GB VRAM to run this project.
+You will need a NVIDIA GPU with at least 10GB VRAM to run this project.
 
 ## Installation
 
@@ -42,11 +42,11 @@ Since I couldn't publish my model on GitHub, you have to train your own first. S
 After training, rename your log located in `logs` to latest and rename the model you want to use to `logs/latest/models/latest.pth`
 
 Possible arguments to run the evaluation are listed below.
-You can run them with `b5 scenario:run <Experiment> <Dataset>`.
+You can run them with `b5 scenario:run <Dataset> <Experiment> `.
 
 | Experiment | Dataset                |
 |------------|------------------------|
-| exp_1      | abc_exp                |
+| exp_1      | blocks                 |
 | exp_2      | abc_exp                |
 | exp_c      | abc_single/<1/2/3/4/5> |
 | exp_ll     | abc_single/<1/2/3/4/5> |
